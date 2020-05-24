@@ -1,0 +1,101 @@
+<HTML>
+
+<head>
+  <title>
+    Train Escort Info
+  </title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+    integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+  <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+    integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+    integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+    crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+    integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+    crossorigin="anonymous"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12 col-md-12">
+        <h1 class="mt-5">Enter Train Escort Information</h1>
+        <form id='test' name='test'>
+
+          <div class="form-group">
+            <label for="age">Train Number : </label>
+            <input type="text" class="form-control" id="train_no" placeholder="Enter train number ...">
+          </div>
+
+          <div class="form-group">
+            <label for="age">Origin Station : </label>
+            <input type="text" class="form-control" id="origin" placeholder="Enter origin station ...">
+          </div>
+
+          <div class="form-group">
+            <label for="age">Terminating Station : </label>
+            <input type="text" class="form-control" id="terminating" placeholder="Enter terminating station ...">
+          </div>
+
+          <div class="form-group">
+            <label for="age">Current Station : </label>
+            <input type="text" class="form-control" id="current" placeholder="Enter current station ...">
+          </div>
+
+          <div class="form-group">
+            <label for="age">Escort Name : </label>
+            <input type="text" class="form-control" id="escort_name" placeholder="Enter escort name ...">
+          </div>
+
+
+          <div class="form-group">
+            <label for="age">Escort Phone Number : </label>
+            <input type="text" class="form-control" id="escort_phone" placeholder="Enter escort phone number ...">
+          </div>
+
+          <p>
+            Information about you (the person who's entering this data).
+          </p>
+
+
+          <div class="form-group">
+            <label for="age">What's your zone : </label>
+            <input type="text" class="form-control" id="zone" placeholder="Enter your zone ...">
+          </div>
+
+          <div class="form-group">
+            <label for="age">What's your name : </label>
+            <input type="text" class="form-control" id="name" placeholder="Enter your name ...">
+          </div>
+      </div>
+    </div>
+    <br />
+    <button type="button" class="btn btn-primary" onclick="submitdata()">Submit</button>&nbsp;&nbsp;&nbsp;<button
+      type="button" class="btn btn-primary" onClick=' home()'>Return Home</button>
+    </a>
+  </div>
+
+</body>
+<script>
+  function home() {
+    window.location = '/';
+  };
+
+  function submitdata() {
+    var train_no = $('#train_no').val();
+    var origin = $('#origin').val();
+    var terminating = $('#terminating').val();
+    var current = $('#current').val();
+    var escort_name = $('#escort_name').val();
+    var escort_phone = $('#escort_phone').val();
+    var zone = $('#zone').val();
+    var name = $('#name').val();
+    var url = 'get_data?train_no=' + train_no + '&origin=' + origin + '&terminating=' + terminating + '&current=' + current + '&escort_name=' + escort_name + '&escort_phone=' + escort_phone + '&zone=' + zone + '&name=' + name
+    window.location = url
+  }
+</script>
+
+</HTML>
