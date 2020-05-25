@@ -96,6 +96,11 @@ def get_data():
 def done():
   return render_template('done.html')
 
+@app.route('/password')
+def password():
+  key = 'rpfvinay'
+  return render_template('password.html',key=key)
+
 @app.route('/enter')
 def enter():
   return render_template('enter.html')
