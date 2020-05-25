@@ -27,6 +27,8 @@ class Escort(db.Model):
   escort_phone = db.Column(db.String)
   zone = db.Column(db.String)
   updater_name = db.Column(db.String)
+  escort_from = db.Column(db.String)
+  escort_to = db.Column(db.String)
 
 def generate_random_string(stringLength=10):
   letters = string.ascii_lowercase
@@ -72,11 +74,14 @@ def get_data():
   escort_name = request.args.get('escort_name')
   zone = request.args.get('zone')
   name = request.args.get('name')
+  escort_from = request.args.get('escort_from')
+  escort_to = request.args.get('escort_to')
   eid = generate_random_string(15)
   date = datetime.datetime.now()
-  new_escort = Escort(transaction_id=eid, datetime_created=datetime.datetime.now(),\
+  new_escort = Escort(transaction_id=eid, datetime_created=date,\
   train_number=train_no,origin=origin,terminating=terminating,\
-  current=current,escort_name=escort_name,escort_phone=escort_phone, zone=zone, updater_name=name)
+  current=current,escort_name=escort_name,escort_phone=escort_phone,\
+  zone=zone, updater_name=name, escort_from=escort_from, escort_to=escort_to)
   db.session.add(new_escort)
   db.session.commit()
 

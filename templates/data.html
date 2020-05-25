@@ -47,18 +47,24 @@
       <table class="table table-bordered">
         <thead>
           <tr>
+            <th>Train No.</th>
             <th>Escort Name</th>
             <th>Escort Phone</th>
-            <th>Train Location</th>
-            <th>Datetime of Entry</th>
-            <th>Origin</th>
-            <th>Termination</th>
+            <th>Escort From Station</th>
+            <th>Escort To Station</th>
+            <th>CurrentTrain Location</th>
+            <th>Datetime of Data Update</th>
+            <th>Train Origin</th>
+            <th>Train Termination</th>
           </tr>
         </thead>
         <tbody>
           <tr>
+            <td>{{ latest.train_number }}</td>
             <td>{{ latest.escort_name }}</td>
             <td>{{ latest.escort_phone }}</td>
+            <td>{{ latest.escort_from }}</td>
+            <td>{{ latest.escort_to }}</td>
             <td>{{ latest.current }}</td>
             <td>{{ latest.datetime_created }}</td>
             <td>{{ latest.origin }}</td>

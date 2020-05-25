@@ -56,6 +56,18 @@
             <input type="text" class="form-control" id="escort_phone" placeholder="Enter escort phone number ...">
           </div>
 
+          <div class="form-group">
+            <label for="age">Escort Boarding Station : </label>
+            <input type="text" class="form-control" id="escort_from"
+              placeholder="Enter station where escort boarded ...">
+          </div>
+
+          <div class="form-group">
+            <label for="age">Escort De-boarding Station : </label>
+            <input type="text" class="form-control" id="escort_to"
+              placeholder="Enter station where escort will de-board ...">
+          </div>
+
           <p>
             Information about you (the person who's entering this data).
           </p>
@@ -93,7 +105,9 @@
     var escort_phone = $('#escort_phone').val();
     var zone = $('#zone').val();
     var name = $('#name').val();
-    var url = 'get_data?train_no=' + train_no + '&origin=' + origin + '&terminating=' + terminating + '&current=' + current + '&escort_name=' + escort_name + '&escort_phone=' + escort_phone + '&zone=' + zone + '&name=' + name
+    var escort_from = $('#escort_from').val();
+    var escort_to = $('#escort_to').val();
+    var url = 'get_data?train_no=' + train_no + '&origin=' + origin + '&terminating=' + terminating + '&current=' + current + '&escort_name=' + escort_name + '&escort_phone=' + escort_phone + '&zone=' + zone + '&name=' + name + '&escort_from=' + escort_from + '&escort_to=' + escort_to
     window.location = url
   }
 </script>
