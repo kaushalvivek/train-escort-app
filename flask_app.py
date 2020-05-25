@@ -1,10 +1,10 @@
 from flask import Flask, render_template, url_for, redirect, request, jsonify, session
 from flask_session import Session
 from flask_sqlalchemy import SQLAlchemy
-import datetime
+from dateutil import tz
+from datetime import datetime
 import random , string
 import json
-import datetime
 import requests
 
 # initializing the App and database
@@ -18,7 +18,7 @@ Session(app)
 
 class Escort(db.Model):
   transaction_id = db.Column(db.String, primary_key=True)
-  datetime_created = db.Column(db.DateTime, default=datetime.datetime.now())
+  datetime_created = db.Column(db.DateTime, default=datetime.now())
   train_number = db.Column(db.Integer)
   origin = db.Column(db.String)
   terminating = db.Column(db.String)
@@ -42,9 +42,14 @@ def index():
 def data():
   train_no = session.get('train_no')
   output = Escort.query.filter(Escort.train_number==train_no).order_by(Escort.datetime_created).all()
-  print(output)
+  from_zone = tz.gettz('UTC')
+  to_zone = tz.gettz('Asia/Kolkata')
+  format = "%Y-%m-%d %H:%M:%S %Z%z"
+
   try:
-    return render_template('data.html', latest=output[-1], all=output)
+    naive_date = output[-1].datetime_created.replace(tzinfo=from_zone)
+    indian_datetime = naive_date.astimezone(to_zone).strftime(format)
+    return render_template('data.html', latest=output[-1], all=output,indian_datetime=indian_datetime)
   except:
     return render_template('error.html')
 
@@ -77,7 +82,7 @@ def get_data():
   escort_from = request.args.get('escort_from')
   escort_to = request.args.get('escort_to')
   eid = generate_random_string(15)
-  date = datetime.datetime.now()
+  date = datetime.now()
   new_escort = Escort(transaction_id=eid, datetime_created=date,\
   train_number=train_no,origin=origin,terminating=terminating,\
   current=current,escort_name=escort_name,escort_phone=escort_phone,\
