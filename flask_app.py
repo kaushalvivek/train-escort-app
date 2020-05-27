@@ -2,7 +2,7 @@ from flask import Flask, render_template, url_for, redirect, request, jsonify, s
 from flask_session import Session
 from flask_sqlalchemy import SQLAlchemy
 from dateutil import tz
-from datetime import datetime
+from datetime import datetime, timedelta
 import random , string
 import json
 import requests
@@ -37,6 +37,18 @@ def generate_random_string(stringLength=10):
 @app.route('/')
 def index():
   return render_template('index.html')
+
+@app.route('/all')
+def all():
+  format = "%Y-%m-%d %H:%M:%S %Z%z"
+  three_days_ago = datetime.now() - timedelta(3)
+  output = Escort.query.filter(Escort.datetime_created>=three_days_ago).order_by(Escort.datetime_created.desc()).all()
+  from_zone = tz.gettz('UTC')
+  to_zone = tz.gettz('Asia/Kolkata')
+  for i in output:
+    naive_date = i.datetime_created.replace(tzinfo=from_zone)
+    i.datetime_created = naive_date.astimezone(to_zone).strftime(format)
+  return render_template('all.html',output=output)
 
 @app.route('/data')
 def data():
@@ -98,8 +110,16 @@ def done():
 
 @app.route('/password')
 def password():
+  return render_template('password.html',wrong=False)
+
+@app.route('/verify')
+def verify():
   key = 'rpfvinay'
-  return render_template('password.html',key=key)
+  entered = request.args.get('entered')
+  if entered == key:
+    return redirect('/enter')
+  else:
+    return render_template('password.html',wrong=True)
 
 @app.route('/enter')
 def enter():
