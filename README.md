@@ -70,7 +70,6 @@ Reach out to me at one of the following places!
 
 ## Donations
 
-<script src="https://liberapay.com/kaushalvivek/widgets/button.js"></script>
 <noscript><a href="https://liberapay.com/kaushalvivek/donate"><img alt="Donate using Liberapay" src="https://liberapay.com/assets/widgets/donate.svg"></a></noscript>
 
 ---
