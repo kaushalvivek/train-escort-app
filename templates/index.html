@@ -24,6 +24,11 @@
       <div class="col-lg-12 col-md-12">
         <h1 class="mt-5">Enter Train Number to Show Escort </h1>
         <br />
+        <div id="message" style="display:none">
+          <p style="color:red;">
+            No entry for this train number over the last 3 days.
+          </p>
+        </div>
         <div class="form-group">
           <input type="text" class="form-control" id="train" placeholder="Enter train number ...">
         </div>
@@ -42,6 +47,11 @@
   </div>
 </body>
 <script>
+
+  if ('{{ error }}' == 'True') {
+    $('#message').css('display', 'block');
+  }
+
   function submit() {
     var train_no = $(' #train').val();
     var url = 'get_train_no?train_no=' + train_no;

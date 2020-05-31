@@ -35,9 +35,11 @@
 
   </div>
   <br />
+  {% for latest in output %}
   <div class="text-center">
+    <br />
     <p>
-      <strong>Latest Entry</strong>
+      <strong>Latest Entry for train that originated on {{ latest['origin_date'] }}</strong>
     </p>
   </div>
   <br />
@@ -52,32 +54,34 @@
             <th>Escort Phone</th>
             <th>Escort From Station</th>
             <th>Escort To Station</th>
-            <th>CurrentTrain Location</th>
-            <th>Datetime of Data Update</th>
+            <th>Current Train Location</th>
             <th>Train Origin</th>
             <th>Train Termination</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td>{{ latest.train_number }}</td>
-            <td>{{ latest.escort_name }}</td>
-            <td>{{ latest.escort_phone }}</td>
-            <td>{{ latest.escort_from }}</td>
-            <td>{{ latest.escort_to }}</td>
-            <td>{{ latest.current }}</td>
-            <td>{{ indian_datetime }}</td>
-            <td>{{ latest.origin }}</td>
-            <td>{{ latest.terminating }}</td>
+            <td>{{ latest['train_no'] }}</td>
+            <td>{{ latest['escort_name'] }}</td>
+            <td>{{ latest['escort_phone'] }}</td>
+            <td>{{ latest['escort_from'] }}</td>
+            <td>{{ latest['escort_to'] }}</td>
+            <td>{{ latest['current'] }}</td>
+            <td>{{ latest['origin'] }}</td>
+            <td>{{ latest['terminating'] }}</td>
           </tr>
         </tbody>
       </table>
       <div class="text-center">
-        Updated by {{ latest.updater_name }} of zone - {{ latest.zone }}<br />
+        Updated by {{ latest['updater_name'] }} <br />of zone {{ latest['zone'] }} <br />
+        on {{ latest['datetime_created'] }}
+        <br />
       </div>
     </div>
     <div class="col-lg-2"></div>
   </div>
+  <hr />
+  {% endfor %}
   <br />
   <br />
   <br />
