@@ -39,7 +39,6 @@ def prepare_output(output):
   
   # get unique dates
   origin_dates = {entry['origin_date'] for entry in entries}
-
   # to store final output
   final_output = []
 
@@ -54,7 +53,7 @@ def prepare_output(output):
     final_output.append(all_with_date[0])
 
   # prepare final output for indian date time
-  final_output.sort(key=lambda x:x['origin_date'], reverse=True)
+  # final_output.sort(key=lambda x:x['origin_date'], reverse=True)
   from_zone = tz.gettz('UTC')
   to_zone = tz.gettz('Asia/Kolkata')
   format = "%Y-%m-%d %H:%M:%S %Z%z"
@@ -62,6 +61,8 @@ def prepare_output(output):
   indian_datetime = [i.astimezone(to_zone).strftime(format) for i in naive_date]
   for i in range(len(final_output)):
     final_output[i]['datetime_created'] = indian_datetime[i]
+    if final_output[i]['origin_date'] == None:
+      final_output[i]['origin_date'] = '* date not specified *'
   return final_output
 
 
@@ -105,18 +106,14 @@ def all():
 def data():
   train_no = session.get('train_no')
   three_days_ago = datetime.now() - timedelta(4)
-  output = Escort.query.filter(Escort.train_number==train_no).filter(Escort.origin_date>=three_days_ago).order_by(Escort.datetime_created.desc()).all()
-  
-  # from_zone = tz.gettz('UTC')
-  # to_zone = tz.gettz('Asia/Kolkata')
-  # format = "%Y-%m-%d %H:%M:%S %Z%z"
+  output = Escort.query.filter(Escort.train_number==train_no).filter((Escort.origin_date>=three_days_ago) | (Escort.origin_date == None)).order_by(Escort.datetime_created.desc()).all()
+
+  print(output)
 
   if len(output) == 0:
     return redirect('/error')
 
   try:
-    # naive_date = [i.datetime_created.replace(tzinfo=from_zone) for i in output]
-    # indian_datetime = [i.astimezone(to_zone).strftime(format) for i in naive_date]
     final_output = prepare_output(output)
     return render_template('data.html', output=final_output)
   except:

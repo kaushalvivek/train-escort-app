@@ -95,6 +95,7 @@
       </div>
     </div>
     <br />
+    <p id="error" style="color:red; display: none">Enter Date of Train Origin!</p>
     <button type="button" class="btn btn-primary" onclick="submitdata()">Submit</button>&nbsp;&nbsp;&nbsp;<button
       type="button" class="btn btn-primary" onClick=' home()'>Return Home</button>
     <br />
@@ -114,6 +115,7 @@
   };
 
   function submitdata() {
+    var origin_date = $('#origin_date').val();
     var train_no = $('#train_no').val();
     var origin = $('#origin').val();
     var origin_date = $('#origin_date').val();
@@ -125,8 +127,18 @@
     var name = $('#name').val();
     var escort_from = $('#escort_from').val();
     var escort_to = $('#escort_to').val();
-    var url = 'get_data?train_no=' + train_no + '&origin=' + origin + '&origin_date=' + origin_date + '&terminating=' + terminating + '&current=' + current + '&escort_name=' + escort_name + '&escort_phone=' + escort_phone + '&zone=' + zone + '&name=' + name + '&escort_from=' + escort_from + '&escort_to=' + escort_to
-    window.location = url
+
+    console.log(origin_date)
+
+    // var today = new Date();
+    if (!origin_date) {
+      $('#error').css('display', 'block');
+    }
+    else {
+      var url = 'get_data?train_no=' + train_no + '&origin=' + origin + '&origin_date=' + origin_date + '&terminating=' + terminating + '&current=' + current + '&escort_name=' + escort_name + '&escort_phone=' + escort_phone + '&zone=' + zone + '&name=' + name + '&escort_from=' + escort_from + '&escort_to=' + escort_to
+      window.location = url
+    }
+
   }
 </script>
 
