@@ -53,7 +53,7 @@ def prepare_output(output):
     final_output.append(all_with_date[0])
 
   # prepare final output for indian date time
-  # final_output.sort(key=lambda x:x['origin_date'], reverse=True)
+  final_output.sort(key=lambda x:x['origin_date'], reverse=True)
   from_zone = tz.gettz('UTC')
   to_zone = tz.gettz('Asia/Kolkata')
   format = "%Y-%m-%d %H:%M:%S %Z%z"
@@ -106,7 +106,8 @@ def all():
 def data():
   train_no = session.get('train_no')
   three_days_ago = datetime.now() - timedelta(4)
-  output = Escort.query.filter(Escort.train_number==train_no).filter((Escort.origin_date>=three_days_ago) | (Escort.origin_date == None)).order_by(Escort.datetime_created.desc()).all()
+  # output = Escort.query.filter(Escort.train_number==train_no).filter((Escort.origin_date>=three_days_ago) | (Escort.origin_date == None)).order_by(Escort.datetime_created.desc()).all()
+  output = Escort.query.filter(Escort.train_number==train_no).filter(Escort.origin_date>=three_days_ago).order_by(Escort.datetime_created.desc()).all()
 
   print(output)
 
