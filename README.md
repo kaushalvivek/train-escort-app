@@ -4,7 +4,7 @@
 
 > A web-app for Indian Railways to Manage Police Escorts in fight against COVID-19
 
-[![Build Status](https://img.shields.io/badge/Build-1.3-green)
+![Build Status](https://img.shields.io/badge/Build-1.3-green)
 
 
 
