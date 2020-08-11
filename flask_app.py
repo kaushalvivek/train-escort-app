@@ -165,7 +165,7 @@ def password():
 
 @app.route('/verify')
 def verify():
-  key = 'rpfvinay'
+  key = '<pass>'
   entered = request.args.get('entered')
   if entered == key:
     return redirect('/enter')
