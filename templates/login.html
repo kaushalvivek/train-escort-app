@@ -1,0 +1,108 @@
+{% include "header.html" %}
+<style>
+  .card {
+    margin: 0 auto;
+    /* Added */
+    float: none;
+    /* Added */
+    margin-bottom: 10px;
+    /* Added */
+  }
+
+  .form-signin {
+    width: 100%;
+    max-width: 330px;
+    padding: 15px;
+    margin: 0 auto;
+  }
+
+  .form-signin .checkbox {
+    font-weight: 400;
+  }
+
+  .form-signin .form-control {
+    position: relative;
+    box-sizing: border-box;
+    height: auto;
+    padding: 10px;
+    font-size: 16px;
+  }
+
+  .form-signin .form-control:focus {
+    z-index: 2;
+  }
+
+  .form-signin input[type="email"] {
+    margin-bottom: -1px;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+
+  .form-signin input[type="password"] {
+    margin-bottom: 10px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+  }
+
+  body {
+    background-image: url("{{ url_for('static', filename='images/bg.jpg')    }}");
+    background-size: 100%;
+  }
+</style>
+<br />
+<br />
+<br />
+<br />
+<br />
+<div class="row">
+  <div class="card shadow-lg" style="width: 25rem;">
+    <div class="card-body">
+      <form class="form-signin">
+        <!-- <img class="mb-4" src="https://getbootstrap.com/assets/brand/bootstrap-solid.svg" alt="" width="72" height="72"> -->
+        <h1 class="h3 mb-3 font-weight-normal">Sign In</h1>
+        <input tupe='text' id="inputName"class="form-control" placeholder="Enter Your Name" required autofocus>
+        <select class="form-control" id="inputZone" required>
+            <option>Select Zone</option>
+            {% for zone in zones %}
+            <option>{{ zone }}</option>
+            {% endfor %}
+          </select>
+        <label for="inputPassword" class="sr-only">Password</label>
+        <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
+        <button class="btn btn-lg btn-dark btn-block">Sign in</button>
+      </form>
+      <div id="message" style="display:none">
+        <p style="color:red;">
+          Incorrect Password
+        </p>
+        <p class="font-weight-lighter">Contact ASC/PS Vinay Maharaj at +91 9717641280 if you've forgotten your password.</p>
+      </div>
+      <br />
+      <div class="col-md-12">
+        Made with <span style="color: #e25555;">&#9829;</span> for Indian Railways<br />
+        <a href="https://vivekkaushal.com" target="_blank">vivekkaushal.com</a>
+      </div>
+    </div>
+  </div>
+</div>
+</body>3
+<script>
+
+  $(document).ready(function () {
+    if ('{{ error }}' == 'True') {
+      $('#message').css('display', 'block');
+    }
+  });
+
+  $("form").on('submit', function (e) {
+    e.preventDefault();
+    console.log('clicked')
+    var name = $(' #inputName').val();
+    var zone = $(' #inputZone').val();
+    var password = $(' #inputPassword').val();
+    var url = 'verify?name=' + name +'&zone='+ zone + "&password=" + password;
+    window.location = url;
+  });
+</script>
+
+</HTML>

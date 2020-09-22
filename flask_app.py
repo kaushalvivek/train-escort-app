@@ -5,13 +5,17 @@ from dateutil import tz
 from datetime import datetime, timedelta
 import random , string
 import json
-import requests
 
 # initializing the App and database
 app = Flask(__name__)
 SESSION_TYPE = 'filesystem'
 app.config['SQLALCHEMY_DATABASE_URI']='sqlite:///store.db'
 db = SQLAlchemy(app)
+
+SECRET_KEY="dfjaiofanfdklasnfv1231sdjfwdaipfoj123awd"
+zones = ['CR','ER','ECR','NR','NCR','NER','NFR','SR','SCR','SER','SECR','SWR','WR','WCR','KR']
+train_types=['15 Pairs','Shramik Special','100 Pairs']
+password = "password"
 
 app.config.from_object(__name__)
 Session(app)
@@ -66,21 +70,23 @@ def prepare_output(output):
   return final_output
 
 
-
-class Escort(db.Model):
+class Entry(db.Model):
   transaction_id = db.Column(db.String, primary_key=True)
   datetime_created = db.Column(db.DateTime, default=datetime.now())
-  train_number = db.Column(db.Integer)
-  origin = db.Column(db.String)
-  terminating = db.Column(db.String)
-  current = db.Column(db.String)
+  train_no = db.Column(db.Integer)
+  train_type = db.Column(db.String)
+  origin_date = db.Column(db.DateTime)
+  origin_zone = db.Column(db.Boolean)
+  terminating_zone= db.Column(db.Boolean)
+
   escort_name = db.Column(db.String)
   escort_phone = db.Column(db.String)
-  zone = db.Column(db.String)
-  updater_name = db.Column(db.String)
+  escort_count = db.Column(db.Integer)
   escort_from = db.Column(db.String)
   escort_to = db.Column(db.String)
-  origin_date = db.Column(db.String)
+
+  updater_name = db.Column(db.String)
+  zone = db.Column(db.String)
 
 def generate_random_string(stringLength=10):
   letters = string.ascii_lowercase
@@ -88,93 +94,72 @@ def generate_random_string(stringLength=10):
 
 @app.route('/')
 def index():
-  return render_template('index.html', error=False)
-
-@app.route('/all')
-def all():
-  format = "%Y-%m-%d %H:%M:%S %Z%z"
-  three_days_ago = datetime.now() - timedelta(3)
-  output = Escort.query.filter(Escort.datetime_created>=three_days_ago).order_by(Escort.datetime_created.desc()).all()
-  from_zone = tz.gettz('UTC')
-  to_zone = tz.gettz('Asia/Kolkata')
-  for i in output:
-    naive_date = i.datetime_created.replace(tzinfo=from_zone)
-    i.datetime_created = naive_date.astimezone(to_zone).strftime(format)
-  return render_template('all.html',output=output)
-
-@app.route('/data')
-def data():
-  train_no = session.get('train_no')
-  three_days_ago = datetime.now() - timedelta(4)
-  # output = Escort.query.filter(Escort.train_number==train_no).filter((Escort.origin_date>=three_days_ago) | (Escort.origin_date == None)).order_by(Escort.datetime_created.desc()).all()
-  output = Escort.query.filter(Escort.train_number==train_no).filter(Escort.origin_date>=three_days_ago).order_by(Escort.datetime_created.desc()).all()
-
-  print(output)
-
-  if len(output) == 0:
-    return redirect('/error')
-
-  try:
-    final_output = prepare_output(output)
-    return render_template('data.html', output=final_output)
-  except:
-    return redirect('/error')
+  # if logged in, redirect to data entry page
+  if 'token' in session and session.get('token')==SECRET_KEY:
+    return render_template('enter.html', \
+      name=session.get('name'), zone=session.get('zone'), train_types=train_types)
+  # if not logged in, redirect to login
+  return render_template('login.html', zones=zones, error=False)
 
 @app.route('/error')
 def error():
-    return render_template('index.html', error=True)
-
-
-@app.route('/get_train_no')
-def get_train_no():
-  train_no = request.args.get('train_no')
-  session['train_no'] = train_no
-  return redirect('/data')
-
-@app.route('/get_data')
-def get_data():
-  train_no = int(request.args.get('train_no'))
-  origin = request.args.get('origin')
-  origin_date = request.args.get('origin_date')
-  terminating = request.args.get('terminating')
-  current = request.args.get('current')
-  escort_phone = request.args.get('escort_phone')
-  escort_name = request.args.get('escort_name')
-  zone = request.args.get('zone')
-  name = request.args.get('name')
-  escort_from = request.args.get('escort_from')
-  escort_to = request.args.get('escort_to')
-  eid = generate_random_string(15)
-  date = datetime.now()
-  new_escort = Escort(transaction_id=eid, datetime_created=date,\
-  train_number=train_no,origin=origin,origin_date=origin_date,terminating=terminating,\
-  current=current,escort_name=escort_name,escort_phone=escort_phone,\
-  zone=zone, updater_name=name, escort_from=escort_from, escort_to=escort_to)
-  db.session.add(new_escort)
-  db.session.commit()
-
-  return redirect('/done')
-
-@app.route('/done')
-def done():
-  return render_template('done.html')
-
-@app.route('/password')
-def password():
-  return render_template('password.html',wrong=False)
+  if 'token' in session and session.get('token')==SECRET_KEY:
+    return redirect('/')
+  return render_template('login.html', zones=zones, error=True)
 
 @app.route('/verify')
 def verify():
-  key = '<pass>'
-  entered = request.args.get('entered')
-  if entered == key:
-    return redirect('/enter')
+  if 'token' in session and session.get('token')==SECRET_KEY:
+    return redirect('/')
+  if request.args.get('password') == password:
+    session['name']=request.args.get('name')
+    session['zone']=request.args.get('zone')
+    session['token']=SECRET_KEY
+    return redirect('/')
   else:
-    return render_template('password.html',wrong=True)
+    return redirect('/error')
 
-@app.route('/enter')
-def enter():
-  return render_template('enter.html')
+@app.route('/get_data')
+def get_data():
+  if 'token' in session and session.get('token')==SECRET_KEY:
+    train_no = int(request.args.get('train_no'))
+    train_type = request.args.get('train_type')
+    origin_date = request.args.get('origin_date')
+    origin_zone = request.args.get('origin')
+    terminating_zone = request.args.get('terminating')
+
+    escort_phone = request.args.get('escort_phone')
+    escort_name = request.args.get('escort_name')
+    escort_count = request.args.get('escort_count')
+    escort_from = request.args.get('escort_from')
+    escort_to = request.args.get('escort_to')
+    
+    updater_name = session.get('updater')
+    zone = session.get('zone')
+    stamp = datetime.now()
+    tran_id = generate_random_string(15)
+
+    new_entry = Entry(
+      transaction_id=tran_id, datetime_created=stamp,updater_name=updater_name,zone=zone,\
+      train_no=train_no,train_type=train_type,origin_date=origin_date,\
+      origin_zone=origin_zone, terminating_zone=terminating_zone,\
+      escort_name=escort_name,escort_phone=escort_phone,escort_count=escort_count,\
+      escort_from=escort_from, escort_to=escort_to)
+    db.session.add(entry)
+    db.session.commit()
+
+    return redirect('/done')
+  else:
+    return redirect('/')
+
+@app.route('/logout')
+def logout():
+  session.clear()
+  return redirect('/')
+
+@app.route('/help')
+def help():
+  return render_template('help.html')
 
 if __name__ == "__main__":
   app.run(debug=True)

@@ -1,111 +1,119 @@
-<HTML>
+{% include "header.html" %}
+<div class="container">
+  <div class="card mt-4">
+    <div class="card-body mt-2">
+      <div class="row">
+        <div class="col-md-4">
+          <div class="text-justify">
+            <h3>Hi, {{ name }}! <span class="badge badge-info">{{ zone }}</span></h3>
 
-<head>
-  <title>
-    Train Escort Info
-  </title>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
-    integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-  <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
-    integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
-    crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
-    integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
-    crossorigin="anonymous"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
-    integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
-    crossorigin="anonymous"></script>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-</head>
-
-<body>
-  <div class="container">
-    <div class="row">
-      <div class="col-lg-12 col-md-12">
-        <h1 class="mt-5">Enter Train Escort Information</h1>
-        <form id='test' name='test'>
-
-          <div class="form-group">
-            <label for="age">Train Number : </label>
-            <input type="text" class="form-control" id="train_no" placeholder="Enter train number ...">
+            <p id="date">Not {{ name }} from zone {{zone}}? <a href="{{ url_for('logout') }}">logout.</a></p>
           </div>
-
-          <div class="form-group">
-            <label for="age">Origin Station : </label>
-            <input type="text" class="form-control" id="origin" placeholder="Enter origin station ...">
+        </div>
+        <div class="col-md-8">
+          <div class="text-justify">
+            <h5 class="ml-2">Instructions:</h5>
+            <p class="ml-2">
+              All train escort information should be filled <span class="badge badge-danger">two days in advance</span>.
+              For example, if an escort segment is scheduled to board on <span
+                class="badge badge-warning">Wednesday</span>,
+              it's details should be filled latest by <span class="badge badge-success">Monday morning 09:00</span>.
+            </p>
           </div>
-
-          <div class="form-group">
-            <label for="origin_date">
-              <div style='color: red;'>-- NEW -- <br />
-                <em>when did the train start from the origin station?</em></div>
-              Date of Train Origin :
-            </label>
-            <input type="date" class="form-control" id="origin_date">
-          </div>
-
-
-          <div class="form-group">
-            <label for="age">Terminating Station : </label>
-            <input type="text" class="form-control" id="terminating" placeholder="Enter terminating station ...">
-          </div>
-
-          <div class="form-group">
-            <label for="age">Current Station : </label>
-            <input type="text" class="form-control" id="current" placeholder="Enter current station ...">
-          </div>
-
-          <div class="form-group">
-            <label for="age">Escort Name : </label>
-            <input type="text" class="form-control" id="escort_name" placeholder="Enter escort name ...">
-          </div>
-
-
-          <div class="form-group">
-            <label for="age">Escort Phone Number : </label>
-            <input type="text" class="form-control" id="escort_phone" placeholder="Enter escort phone number ...">
-          </div>
-
-          <div class="form-group">
-            <label for="age">Escort Boarding Station : </label>
-            <input type="text" class="form-control" id="escort_from"
-              placeholder="Enter station where escort boarded ...">
-          </div>
-
-          <div class="form-group">
-            <label for="age">Escort De-boarding Station : </label>
-            <input type="text" class="form-control" id="escort_to"
-              placeholder="Enter station where escort will de-board ...">
-          </div>
-
-          <p>
-            Information about you (the person who's entering this data).
-          </p>
-
-
-          <div class="form-group">
-            <label for="age">What's your zone : </label>
-            <input type="text" class="form-control" id="zone" placeholder="Enter your zone ...">
-          </div>
-
-          <div class="form-group">
-            <label for="age">What's your name : </label>
-            <input type="text" class="form-control" id="name" placeholder="Enter your name ...">
-          </div>
+        </div>
       </div>
     </div>
-    <br />
-    <p id="error" style="color:red; display: none">Enter Date of Train Origin!</p>
-    <button type="button" class="btn btn-primary" onclick="submitdata()">Submit</button>&nbsp;&nbsp;&nbsp;<button
-      type="button" class="btn btn-primary" onClick=' home()'>Return Home</button>
-    <br />
-    <br />
-    <br />
-    <div class="text-center">
-      Made with <span style="color: #e25555;">&#9829;</span> for Indian Railways<br />
-      <a href="http://vivekkaushal.com" target="_blank">vivekkaushal.com</a>
+  </div>
+  <div class="card mt-5">
+    <div class="card-body mt-2">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="text-justify">
+            <h4>Train Information:</h4>
+            <div class="input-group mt-4">
+              <div class="input-group-prepend">
+                <div class="input-group-text">Train Number</div>
+              </div>
+              <input type="text" id='train_no' class="form-control" placeholder="enter train number">
+            </div>
+            <div class="input-group mt-4">
+              <div class="input-group-prepend">
+                <div class="input-group-text">Train Type</div>
+              </div>
+              <select class="form-control" id="train_type" required>
+                <option>select train type</option>
+                {% for type in train_types %}
+                <option>{{ type }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="input-group mt-4">
+              <div class="input-group-prepend">
+                <div class="input-group-text"> Train Origin Date</div>
+              </div>
+              <input type="date" id='origin_date' class="form-control">
+            </div>
+            <div class="input-group mt-4">
+              <div class="input-group-prepend">
+                <div class="input-group-text">Train originates in {{ zone }} zone?</div>
+              </div>
+              <select class="form-control" id="origin" required>
+                <option>No</option>
+                <option>Yes</option>
+              </select>
+            </div>
+            <div class="input-group mt-4">
+              <div class="input-group-prepend">
+                <div class="input-group-text">Train terminates in {{ zone }} zone?</div>
+              </div>
+              <select class="form-control" id="terminate" required>
+                <option>No</option>
+                <option>Yes</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="text-left">
+            <h4>Escort Segment Information:</h4>
+            <div class="input-group mt-4">
+              <div class="input-group-prepend">
+                <div class="input-group-text">Escort Name</div>
+              </div>
+              <input type="text" id='escort_name' class="form-control" placeholder="enter name of head of escort party">
+            </div>
+            <div class="input-group mt-4">
+              <div class="input-group-prepend">
+                <div class="input-group-text">Escort Phone Number</div>
+              </div>
+              <input type="text" id='escort_phone' class="form-control" placeholder="enter phone number of head of escort party">
+            </div>
+            <div class="input-group mt-4">
+              <div class="input-group-prepend">
+                <div class="input-group-text">Escort Count</div>
+              </div>
+              <input type="text" id='escort_count' class="form-control" placeholder="enter number of members in escort party">
+            </div>
+            <div class="input-group mt-4">
+              <div class="input-group-prepend">
+                <div class="input-group-text">Boarding Station</div>
+              </div>
+              <input type="text" id='boarding' class="form-control" placeholder="enter boarding station">
+            </div>
+            <div class="input-group mt-4">
+              <div class="input-group-prepend">
+                <div class="input-group-text">De-boarding Station</div>
+              </div>
+              <input type="text" id='deboarding' class="form-control" placeholder="enter de-boarding station">
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
+</div>
+
+<button type="button" class="btn btn-outline-dark mt-4" onclick="submitdata()">Submit Segment Information</button>
 
 </body>
 <script>
