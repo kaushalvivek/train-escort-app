@@ -1,16 +1,16 @@
-from flask import Flask, render_template, url_for, redirect, request, jsonify, session
+from flask import Flask, render_template, redirect, request, session
 from flask_session import Session
 from flask_sqlalchemy import SQLAlchemy
 from dateutil import tz
 from datetime import datetime, timedelta
+from config import AppConfig
 import random , string
-import json
-import requests
 
 # initializing the App and database
 app = Flask(__name__)
 SESSION_TYPE = 'filesystem'
-app.config['SQLALCHEMY_DATABASE_URI']='sqlite:///store.db'
+config = AppConfig().get_config()
+app.config['SQLALCHEMY_DATABASE_URI']=config['db']
 db = SQLAlchemy(app)
 
 app.config.from_object(__name__)
@@ -65,8 +65,6 @@ def prepare_output(output):
       final_output[i]['origin_date'] = '* date not specified *'
   return final_output
 
-
-
 class Escort(db.Model):
   transaction_id = db.Column(db.String, primary_key=True)
   datetime_created = db.Column(db.DateTime, default=datetime.now())
@@ -106,7 +104,6 @@ def all():
 def data():
   train_no = session.get('train_no')
   three_days_ago = datetime.now() - timedelta(4)
-  # output = Escort.query.filter(Escort.train_number==train_no).filter((Escort.origin_date>=three_days_ago) | (Escort.origin_date == None)).order_by(Escort.datetime_created.desc()).all()
   output = Escort.query.filter(Escort.train_number==train_no).filter(Escort.origin_date>=three_days_ago).order_by(Escort.datetime_created.desc()).all()
 
   print(output)
@@ -165,7 +162,7 @@ def password():
 
 @app.route('/verify')
 def verify():
-  key = '<pass>'
+  key = config['key']
   entered = request.args.get('entered')
   if entered == key:
     return redirect('/enter')
