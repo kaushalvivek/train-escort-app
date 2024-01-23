@@ -16,6 +16,9 @@ db = SQLAlchemy(app)
 app.config.from_object(__name__)
 Session(app)
 
+def is_authenticated():
+  return session.get('authenticated') 
+
 def prepare_output(output):
   entries = []
   # convert queries to objects
@@ -84,12 +87,16 @@ def generate_random_string(stringLength=10):
   letters = string.ascii_lowercase
   return ''.join(random.choice(letters) for i in range(stringLength))
 
-@app.route('/')
+@app.route('/home')
 def index():
+  if not is_authenticated():
+    return redirect('/')
   return render_template('index.html', error=False)
 
 @app.route('/all')
 def all():
+  if not is_authenticated():
+    return redirect('/')
   format = "%Y-%m-%d %H:%M:%S %Z%z"
   three_days_ago = datetime.now() - timedelta(3)
   output = Escort.query.filter(Escort.datetime_created>=three_days_ago).order_by(Escort.datetime_created.desc()).all()
@@ -102,6 +109,8 @@ def all():
 
 @app.route('/data')
 def data():
+  if not is_authenticated():
+    return redirect('/')
   train_no = session.get('train_no')
   three_days_ago = datetime.now() - timedelta(4)
   output = Escort.query.filter(Escort.train_number==train_no).filter(Escort.origin_date>=three_days_ago).order_by(Escort.datetime_created.desc()).all()
@@ -119,17 +128,23 @@ def data():
 
 @app.route('/error')
 def error():
+    if not is_authenticated():
+      return redirect('/')
     return render_template('index.html', error=True)
 
 
 @app.route('/get_train_no')
 def get_train_no():
+  if not is_authenticated():
+    return redirect('/')
   train_no = request.args.get('train_no')
   session['train_no'] = train_no
   return redirect('/data')
 
 @app.route('/get_data')
 def get_data():
+  if not is_authenticated():
+    return redirect('/')
   train_no = int(request.args.get('train_no'))
   origin = request.args.get('origin')
   origin_date = request.args.get('origin_date')
@@ -156,7 +171,8 @@ def get_data():
 def done():
   return render_template('done.html')
 
-@app.route('/password')
+# Auhentication
+@app.route('/')
 def password():
   return render_template('password.html',wrong=False)
 
@@ -165,15 +181,17 @@ def verify():
   key = config['key']
   entered = request.args.get('entered')
   if entered == key:
-    return redirect('/enter')
+    session['authenticated'] = True
+    return redirect('/home')
   else:
     return render_template('password.html',wrong=True)
 
 @app.route('/enter')
 def enter():
+  if not is_authenticated():
+    return redirect('/')
   return render_template('enter.html')
 
 if __name__ == "__main__":
-  app.run(host='0.0.0.0')
-
+  app.run(host='0.0.0.0', port=config['port'], debug=True)
 
